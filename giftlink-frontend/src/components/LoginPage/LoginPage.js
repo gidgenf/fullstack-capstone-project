@@ -5,7 +5,8 @@ import {urlConfig} from '../../config';
 import { useAppContext } from '../../context/AuthContext';
 //Step 1 - Task 3
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css';
+import 'fullstack-capstone-project/giftlink-frontend/src/components/LoginPage/LoginPage.css';
+
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
