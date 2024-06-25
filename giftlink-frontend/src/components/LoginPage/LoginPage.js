@@ -3,7 +3,7 @@ import {urlConfig} from '../../config';
 import { useAppContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-import '../../LoginPage.css';
+import 'src/components/LoginPage';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
