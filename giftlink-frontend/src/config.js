@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 //Step 1 - Task 1
 import {urlConfig} from '../src/config';
 //Step 1 - Task 2
-import { useAppContext } from '../context/AuthContext';
+import { useAppContext } from '../AuthContext';
 //Step 1 - Task 3
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
