@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 //Step 1 - Task 1
-import { urlConfig } from '../../config';
+import { urlConfig } from 'giftlink-frontend/src/config.js';
 
 //Step 1 - Task 2
-import { useAppContext } from '../../context/AuthContext';
+import { useAppContext } from 'giftlink-frontend/context/AuthContext.js';
 
 //Step 1 - Task 3
 import { useNavigate } from 'react-router-dom';
