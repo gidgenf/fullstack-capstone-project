@@ -1,99 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 //Step 1 - Task 1
-import { urlConfig } from 'giftlink-frontend/src/config.js';
-
+import {urlConfig} from '../../config';
 //Step 1 - Task 2
-import { useAppContext } from 'giftlink-frontend/context/AuthContext.js';
-
+import { useAppContext } from '../../context/AuthContext';
 //Step 1 - Task 3
 import { useNavigate } from 'react-router-dom';
-
-import './RegisterPage.css';
-
-function RegisterPage() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+import './LoginPage.css';
+function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     //Step 1 - Task 4
-    const [showerr, setShowerr] = useState('');
-
+    const [incorrect, setIncorrect] = useState('');
     //Step 1 - Task 5
     const navigate = useNavigate();
+    const bearerToken = sessionStorage.getItem('bearer-token');
     const { setIsLoggedIn } = useAppContext();
-
-    const handleRegister = async () => {
-        const response = await fetch(`${urlConfig.backendUrl}/api/auth/register`, {
-            //Step 1 - Task 6
-            method: 'POST',
+    //Step 1 - Task 6
+    useEffect(() => {
+        if (sessionStorage.getItem('auth-token')) {
+          navigate('/app')
+        }
+      }, [navigate])
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        //api call
+        const res = await fetch(`${urlConfig.backendUrl}/api/auth/login`, {
             //Step 1 - Task 7
-            headers: {
-                'content-type': 'application/json',
-            },
+            method: 'POST',
             //Step 1 - Task 8
-            body: JSON.stringify({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password
-            })
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': bearerToken ? `Bearer ${bearerToken}` : '', // Include Bearer token if available
+          },
+        //Step 1 - Task 9
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          })
         });
-
-        //Step 2 - Task 1
-        const json = await response.json();
-        console.log('json data', json);
-        console.log('er', json.error);
-
-        //Step 2 - Task 2
+        //Step 2: Task 1
+        const json = await res.json();
+        console.log('Json',json);
         if (json.authtoken) {
-            sessionStorage.setItem('auth-token', json.authtoken);
-            sessionStorage.setItem('name', firstName);
-            sessionStorage.setItem('email', json.email);
-            //Step 2 - Task 3
-            setIsLoggedIn(true);
-            //Step 2 - Task 4
-            navigate('/app');
+            //Step 2: Task 2
+          sessionStorage.setItem('auth-token', json.authtoken);
+          sessionStorage.setItem('name', json.userName);
+          sessionStorage.setItem('email', json.userEmail);
+            //Step 2: Task 3
+          setIsLoggedIn(true);
+            //Step 2: Task 4
+          navigate('/app');
+        } else {
+            //Step 2: Task 5
+          document.getElementById("email").value="";
+          document.getElementById("password").value="";
+          setIncorrect("Wrong password. Try again.");
+          setTimeout(() => {
+            setIncorrect("");
+          }, 2000);
         }
-        if (json.error) {
-            //Step 2 - Task 5
-            setShowerr(json.error);
-        }
-    }
-
+      }
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-6 col-lg-4">
-                    <div className="register-card p-4 border rounded">
-                        <h2 className="text-center mb-4 font-weight-bold">Register</h2>
-                        <div className="mb-3">
-                            <label htmlFor="firstName" className="form-label">FirstName</label>
-                            <input
-                                id="firstName"
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter your firstName"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                            />
-                        </div>
-
-                        {/* last name */}
-
-                        <div className="mb-3">
-                            <label htmlFor="lastName" className="form-label">LastName</label>
-                            <input
-                                id="lastName"
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter your lastName"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                            />
-                        </div>
-
-                        {/* email  */}
+                    <div className="login-card p-4 border rounded">
+                        <h2 className="text-center mb-4 font-weight-bold">Login</h2>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email</label>
                             <input
@@ -102,13 +74,9 @@ function RegisterPage() {
                                 className="form-control"
                                 placeholder="Enter your email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {setEmail(e.target.value); setIncorrect("")}}
                             />
-                            {/* Step 2 - Task 6*/}
-
-                            <div className="text-danger">{showerr}</div>
                         </div>
-
                         <div className="mb-4">
                             <label htmlFor="password" className="form-label">Password</label>
                             <input
@@ -117,12 +85,14 @@ function RegisterPage() {
                                 className="form-control"
                                 placeholder="Enter your password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {setPassword(e.target.value);setIncorrect("")}}
                             />
+                            {/*Step 2: Task 6*/}
+                            <span style={{color:'red',height:'.5cm',display:'block',fontStyle:'italic',fontSize:'12px'}}>{incorrect}</span>
                         </div>
-                        <button className="btn btn-primary w-100 mb-3" onClick={handleRegister}>Register</button>
+                        <button className="btn btn-primary w-100 mb-3" onClick={handleLogin}>Login</button>
                         <p className="mt-4 text-center">
-                            Already a member? <a href="/app/login" className="text-primary">Login</a>
+                            New here? <a href="/app/register" className="text-primary">Register Here</a>
                         </p>
                     </div>
                 </div>
@@ -130,5 +100,4 @@ function RegisterPage() {
         </div>
     );
 }
-
-export default RegisterPage;
+export default LoginPage;
