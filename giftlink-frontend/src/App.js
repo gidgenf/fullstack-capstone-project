@@ -11,16 +11,8 @@ import SearchPage from './components/SearchPage/SearchPage';
 
 function App() {
   const navigate = useNavigate();
-
-  const handleButtonClick = () => {
-    navigate('/app/login');
-  };
-
   return (
     <>
-      <Navbar/>
-      <button onClick={handleButtonClick}>Go to Login</button>
-      <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/app" element={<MainPage />} />
         <Route path="/app/login" element={<LoginPage/>} />
