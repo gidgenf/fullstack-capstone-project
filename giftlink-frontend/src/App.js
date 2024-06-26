@@ -11,7 +11,7 @@ import SearchPage from './components/SearchPage/SearchPage';
 
 function App() {
   const navigate = useNavigate();
-  
+
   const handleButtonClick = () => {
     navigate('/app/login');
   };
@@ -19,6 +19,7 @@ function App() {
   return (
     <>
       <Navbar/>
+      <button onClick={handleButtonClick}>Go to Login</button>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/app" element={<MainPage />} />
@@ -30,5 +31,3 @@ function App() {
     </>
   );
 }
-
-export default App;
